@@ -13,24 +13,40 @@ import ShoppingHome from "./pages/shopping/home"
 import ShoppingListing from "./pages/shopping/listing"
 import ShoppingCheckout from "./pages/shopping/checkout"
 import ShoppingAccount from "./pages/shopping/account"
+import CheckAuth from "./components/common/checkAuth"
 
 function App() {
+
+  const isAuthenticated = true
+  const user = {name: "bilal", role: "admin"}
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        <Route path="/auth" element={<AuthLayout />}>
+        <Route path="/auth" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <AuthLayout />
+          </CheckAuth>
+        }>
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
           <Route />
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <AdminLayout />
+          </CheckAuth>
+        }>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
-        <Route path="/shop" element={<ShoppingLayout />}>
+        <Route path="/shop" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <ShoppingLayout />
+          </CheckAuth>
+        }>
           <Route path="home" element={<ShoppingHome />} />
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
