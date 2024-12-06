@@ -9,7 +9,7 @@ export const registerFormControls = [
   {
     name: "email",
     label: "Email",
-    placeholder: "Enter your Enail",
+    placeholder: "Enter your Email",
     componentType: "input",
     type: "email",
   },
