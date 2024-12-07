@@ -1,9 +1,9 @@
 import express from "express";
 import "dotenv/config";
-import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
+import authRouter from './routes/authRoute.js'
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -26,5 +26,8 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+// routes
+app.use('/api/auth', authRouter)
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
