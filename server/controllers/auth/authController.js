@@ -63,4 +63,9 @@ const logout = (req, res) => {
     .json({ success: true, message: "Logged Out Successfully!" });
 };
 
-export { register, login, logout };
+const checkAuth = (req, res) => {
+  const user = req.user;
+  res.status(200).json({ success: true, message: "Authenticated User", user });
+};
+
+export { register, login, logout, checkAuth };
