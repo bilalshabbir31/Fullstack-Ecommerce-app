@@ -28,7 +28,29 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    // const
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: "User doesn't Exists" });
+    }
+    const validatePassword = await bcrypt.compare(password, user.password);
+    if (!validatePassword) {
+      return res.json({ success: false, message: "Incorrect Password" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role, email: user.email },
+      process.env.CLIENT_SECRET,
+      {
+        expiresIn: "60m",
+      }
+    );
+
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    res.cookie("token", token, { httpOnly: true, secure: false }).json({
+      success: true,
+      message: "Logged In Successfully",
+      user: userWithoutPassword,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Some Error Occured" });
