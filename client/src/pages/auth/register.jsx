@@ -18,7 +18,7 @@ const AuthRegister = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   function onSubmit(event) {
     event.preventDefault()
@@ -27,7 +27,13 @@ const AuthRegister = () => {
         toast({
           title: data?.payload?.message
         })
-        navigate('/auth/login');}
+        navigate('/auth/login');
+      } else {
+        toast({
+          title: data?.payload?.message,
+          variant: 'destructive'
+        })
+      }
     })
   }
 

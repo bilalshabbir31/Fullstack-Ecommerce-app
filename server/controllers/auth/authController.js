@@ -5,6 +5,10 @@ import User from "../../models/User.js";
 const register = async (req, res) => {
   const { userName, email, password } = req.body;
   try {
+    const checkUser = await User.findOne({ email });
+    if (checkUser) {
+      return res.json({ success: false, message: "User already Exists." });
+    }
     const hashPassword = await bcrypt.hash(password, 12);
     const newUser = new User({
       userName,
@@ -22,7 +26,9 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  const { email, password } = req.body;
   try {
+    // const
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Some Error Occured" });
