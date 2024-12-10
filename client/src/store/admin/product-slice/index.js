@@ -24,7 +24,8 @@ export const fetchAllProducts = createAsyncThunk(
 export const editProduct = createAsyncThunk(
   "/products/editProduct",
   async ({ id, formData }) => {
-    const response = await axiosObj.put(`/admin/products/${id}`, formData);
+    const response = await axiosObj.put(`/admin/products/edit/${id}`, formData);
+
     return response?.data;
   }
 );
@@ -56,5 +57,4 @@ const AdminProductSlice = createSlice({
   },
 });
 
-
-export default AdminProductSlice.reducer
+export default AdminProductSlice.reducer;
