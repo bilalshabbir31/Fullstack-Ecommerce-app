@@ -30,7 +30,7 @@ const AdminProducts = () => {
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const dispatch = useDispatch();
   const products = useSelector(state => state.adminProducts.products)
-  console.log(products);
+  const [currentEditedId, setCurrentEditedId] = useState(null);
 
   const { toast } = useToast();
 
@@ -63,19 +63,25 @@ const AdminProducts = () => {
       </div>
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {
-          products && products.length > 0 ? products.map((product) => <AdminProductTile key={product._id} product={product} />) : null
+          products && products.length > 0 ? products.map((product) => <AdminProductTile key={product._id} setFormData={setFormData} setOpenCreateProductsDialog={setOpenCreateProductsDialog} setCurrentEditedId={setCurrentEditedId} product={product} />) : null
         }
       </div>
       <Sheet open={openCreateProductsDialog} onOpenChange={() => {
         setOpenCreateProductsDialog(false);
+        setCurrentEditedId(null);
+        setFormData(initialFormData);
       }}>
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
-            <SheetTitle>Add New Product</SheetTitle>
+            <SheetTitle>{
+              currentEditedId !== null ? 'Edit' : 'Add New Product'
+            }</SheetTitle>
           </SheetHeader>
-          <ProductImageUpload imageFile={imageFile} setImageFile={setImageFile} uploadedImageUrl={uploadedImageUrl} setUploadedImageUrl={setUploadedImageUrl} setImageLoadingState={setImageLoadingState} imageLoadingState={imageLoadingState} />
+          <ProductImageUpload imageFile={imageFile} setImageFile={setImageFile} uploadedImageUrl={uploadedImageUrl} setUploadedImageUrl={setUploadedImageUrl} setImageLoadingState={setImageLoadingState} imageLoadingState={imageLoadingState} isEditMode={currentEditedId !== null} />
           <div className="py-6">
-            <CommonForm onSubmit={onSubmit} formData={formData} setFormData={setFormData} buttonText='Add' formControls={addProductFormElements} />
+            <CommonForm onSubmit={onSubmit} formData={formData} setFormData={setFormData} buttonText={
+              currentEditedId !== null ? 'Edit' : 'Add'
+            } formControls={addProductFormElements} />
           </div>
         </SheetContent>
       </Sheet>
