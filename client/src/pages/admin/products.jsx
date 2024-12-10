@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { addProductFormElements } from "@/config";
 import { useToast } from "@/hooks/use-toast";
-import { addNewProduct, fetchAllProducts } from "@/store/admin/product-slice";
+import { addNewProduct, editProduct, fetchAllProducts } from "@/store/admin/product-slice";
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import AdminProductTile from "./productTile";
@@ -36,20 +36,30 @@ const AdminProducts = () => {
 
   function onSubmit(event) {
     event.preventDefault();
-    dispatch(addNewProduct({
-      ...formData,
-      image: uploadedImageUrl
-    })).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchAllProducts())
-        setOpenCreateProductsDialog(false);
-        setImageFile(null)
-        setFormData(initialFormData)
-        toast({
-          title: 'Product Added Successfully!'
-        })
-      }
-    })
+    console.log(currentEditedId);
+    
+    if (currentEditedId !== null) {
+      dispatch(editProduct({
+        id: currentEditedId, formData
+      })).then((data) => {
+        console.log(data);
+      })
+    } else {
+      dispatch(addNewProduct({
+        ...formData,
+        image: uploadedImageUrl
+      })).then((data) => {
+        if (data?.payload?.success) {
+          dispatch(fetchAllProducts())
+          setOpenCreateProductsDialog(false);
+          setImageFile(null)
+          setFormData(initialFormData)
+          toast({
+            title: 'Product Added Successfully!'
+          })
+        }
+      })
+    }
   }
 
   useEffect(() => {
