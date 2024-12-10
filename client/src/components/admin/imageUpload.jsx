@@ -3,11 +3,11 @@ import { Label } from "../ui/label"
 import { Input } from "../ui/input";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { Form } from "react-router-dom";
 import axiosObj from "@/lib/axios";
+import { Skeleton } from "../ui/skeleton";
 
-const ProductImageUpload = ({ imageFile, setImageFile, uploadedImageUrl, setUploadedImageUrl, setImageLoadingState }) => {
-
+const ProductImageUpload = ({ imageFile, imageLoadingState, setImageFile, uploadedImageUrl, setUploadedImageUrl, setImageLoadingState, isEditMode }) => {
+  
   const inputRef = useRef(null);
 
   function handleImageFileChange(event) {
@@ -58,14 +58,14 @@ const ProductImageUpload = ({ imageFile, setImageFile, uploadedImageUrl, setUplo
   return (
     <div className="w-full max-w-md mx-auto mt-4">
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
-      <div onDragOver={handleDragOver} onDrop={handleDrop} className="border-2 border-dashed rounded-lg p-4">
-        <Input id="image-upload" type="file" className="hidden" ref={inputRef} onChange={handleImageFileChange} />
+      <div onDragOver={handleDragOver} onDrop={handleDrop} className={`${isEditMode ? 'opacity-60': null} border-2 border-dashed rounded-lg p-4`}>
+        <Input id="image-upload" type="file" className="hidden" ref={inputRef} onChange={handleImageFileChange} disabled={isEditMode} />
         {
           !imageFile ?
-            <Label htmlFor="image-upload" className="flex flex-col justify-center h-32 cursor-pointer">
+            <Label htmlFor="image-upload" className={`${isEditMode ? 'cursor-not-allowed' : null}flex flex-col justify-center h-32 cursor-pointer`}>
               <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
               <span>Drag & Drop or Click to Upload Image</span>
-            </Label> : <div className="flex items-center justify-between">
+            </Label> : ( imageLoadingState? <Skeleton className='h-10 bg-gray-100' /> :<div className="flex items-center justify-between">
               <div className="flex items-center">
                 <FileIcon className="w-8 h-8 text-primary mr-2" />
               </div>
@@ -74,7 +74,7 @@ const ProductImageUpload = ({ imageFile, setImageFile, uploadedImageUrl, setUplo
                 <XIcon className="w-4 h-4" />
                 <span className="sr-only">Remove File</span>
               </Button>
-            </div>
+            </div>)
         }
       </div>
     </div>
