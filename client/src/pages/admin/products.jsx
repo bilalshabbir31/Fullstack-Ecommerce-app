@@ -36,13 +36,16 @@ const AdminProducts = () => {
 
   function onSubmit(event) {
     event.preventDefault();
-    console.log(currentEditedId);
-    
+
     if (currentEditedId !== null) {
       dispatch(editProduct({
         id: currentEditedId, formData
       })).then((data) => {
-        console.log(data);
+        if (data.payload.success) {
+          dispatch(fetchAllProducts())
+          setOpenCreateProductsDialog(false);
+          setFormData(initialFormData)
+        }
       })
     } else {
       dispatch(addNewProduct({
