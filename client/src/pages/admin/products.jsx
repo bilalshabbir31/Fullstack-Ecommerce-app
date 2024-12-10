@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { addProductFormElements } from "@/config";
 import { useToast } from "@/hooks/use-toast";
-import { addNewProduct, editProduct, fetchAllProducts } from "@/store/admin/product-slice";
+import { addNewProduct, deleteProduct, editProduct, fetchAllProducts } from "@/store/admin/product-slice";
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import AdminProductTile from "./productTile";
@@ -38,6 +38,14 @@ const AdminProducts = () => {
     return Object.keys(formData).map(key => formData[key] !== '').every(item=> item);
   }
 
+  function handleDelete(getCurrentProductId) {
+    dispatch(deleteProduct(getCurrentProductId)).then((data) => {
+      if(data?.payload?.success) {
+        dispatch(fetchAllProducts())
+      }
+    })
+  }
+
   function onSubmit(event) {
     event.preventDefault();
 
@@ -45,7 +53,7 @@ const AdminProducts = () => {
       dispatch(editProduct({
         id: currentEditedId, formData
       })).then((data) => {
-        if (data.payload.success) {
+        if (data?.payload?.success) {
           dispatch(fetchAllProducts())
           setOpenCreateProductsDialog(false);
           setFormData(initialFormData)
@@ -80,7 +88,7 @@ const AdminProducts = () => {
       </div>
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {
-          products && products.length > 0 ? products.map((product) => <AdminProductTile key={product._id} setFormData={setFormData} setOpenCreateProductsDialog={setOpenCreateProductsDialog} setCurrentEditedId={setCurrentEditedId} product={product} />) : null
+          products && products.length > 0 ? products.map((product) => <AdminProductTile key={product._id} setFormData={setFormData} setOpenCreateProductsDialog={setOpenCreateProductsDialog} setCurrentEditedId={setCurrentEditedId} product={product} handleDelete={handleDelete} />) : null
         }
       </div>
       <Sheet open={openCreateProductsDialog} onOpenChange={() => {
