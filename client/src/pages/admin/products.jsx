@@ -34,6 +34,10 @@ const AdminProducts = () => {
 
   const { toast } = useToast();
 
+  function EnableForm() {
+    return Object.keys(formData).map(key => formData[key] !== '').every(item=> item);
+  }
+
   function onSubmit(event) {
     event.preventDefault();
 
@@ -94,7 +98,7 @@ const AdminProducts = () => {
           <div className="py-6">
             <CommonForm onSubmit={onSubmit} formData={formData} setFormData={setFormData} buttonText={
               currentEditedId !== null ? 'Edit' : 'Add'
-            } formControls={addProductFormElements} />
+            } formControls={addProductFormElements} isButtonDisabled={!EnableForm()} />
           </div>
         </SheetContent>
       </Sheet>
