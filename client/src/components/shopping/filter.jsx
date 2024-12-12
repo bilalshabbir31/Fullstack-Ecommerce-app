@@ -13,18 +13,18 @@ const ProductFilter = () => {
       <div className="p-4 space-y-4">
         {
           Object.keys(filterOptions).map(key => <Fragment key={key}>
-          <div>
-            <h3 className="text-base font-bold">{key}</h3>
-            <div className="grid gap-2 mt-2">
-              {
-                filterOptions[key].map(option => <Label key={option.id} className="flex font-medium item-center gap-2">
-                  <Checkbox />
-                  {option.label}
-                </Label>)
-              }
+            <div>
+              <h3 className="text-base font-bold">{key}</h3>
+              <div className="grid gap-2 mt-2">
+                {
+                  filterOptions[key].map(option => <Label key={option.id} className="flex font-medium item-center gap-2">
+                    <Checkbox />
+                    {option.label}
+                  </Label>)
+                }
+              </div>
             </div>
-          </div>
-          <Separator />
+            <Separator />
           </Fragment>)
         }
       </div>
