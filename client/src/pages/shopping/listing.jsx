@@ -1,4 +1,5 @@
 import ProductFilter from "@/components/shopping/filter"
+import ProductDetailsDailog from "@/components/shopping/productDetailsDailog"
 import ShoppingProductTile from "@/components/shopping/productTile"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -27,6 +28,7 @@ const ShoppingListing = () => {
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   function handleFilters(sectionId, currentOptions) {
     let cpyFilters = { ...filters };
@@ -74,6 +76,12 @@ const ShoppingListing = () => {
     }
   }, [filters])
 
+  useEffect(() => {
+    if (product !== null) {
+      setOpenDetailsDialog(true)
+    }
+  }, [product])
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filters={filters} handleFilters={handleFilters} />
@@ -110,6 +118,7 @@ const ShoppingListing = () => {
           }
         </div>
       </div>
+      <ProductDetailsDailog open={openDetailsDialog} setOpen={setOpenDetailsDialog} product={product} />
     </div>
   )
 }
