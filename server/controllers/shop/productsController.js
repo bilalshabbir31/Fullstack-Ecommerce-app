@@ -47,7 +47,7 @@ const filteredProducts = async (req, res) => {
 const product = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findbyId(id);
+    const product = await Product.findById(id);
     if (!product) {
       return res
         .status(404)
