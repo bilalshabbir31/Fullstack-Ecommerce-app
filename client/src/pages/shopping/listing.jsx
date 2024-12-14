@@ -3,7 +3,7 @@ import ShoppingProductTile from "@/components/shopping/productTile"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
-import { fetchAllFilteredProducts } from "@/store/shop/product-slice"
+import { fetchAllFilteredProducts, fetchProduct } from "@/store/shop/product-slice"
 import { ArrowUpDownIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -23,7 +23,7 @@ function createSearchParamsHelper(filterParams) {
 const ShoppingListing = () => {
 
   const dispatch = useDispatch();
-  const { products } = useSelector(state => state.shopProducts);
+  const { products, product } = useSelector(state => state.shopProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,6 +50,10 @@ const ShoppingListing = () => {
 
   function handleSort(value) {
     setSort(value);
+  }
+
+  function handleGetProductDetails(productId) {
+    dispatch(fetchProduct(productId))
   }
 
   useEffect(() => {
@@ -102,7 +106,7 @@ const ShoppingListing = () => {
         <div className="grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {
             products && products.length > 0 ?
-              products.map(product => <ShoppingProductTile key={product._id} product={product} />) : null
+              products.map(product => <ShoppingProductTile handleGetProductDetails={handleGetProductDetails} key={product._id} product={product} />) : null
           }
         </div>
       </div>
