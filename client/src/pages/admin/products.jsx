@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { addNewProduct, deleteProduct, editProduct, fetchAllProducts } from "@/store/admin/product-slice";
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import AdminProductTile from "./productTile";
+import AdminProductTile from "../../components/admin/productTile";
 
 const initialFormData = {
   image: null,
