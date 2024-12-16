@@ -4,6 +4,7 @@ import ShoppingProductTile from "@/components/shopping/productTile"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
+import { useToast } from "@/hooks/use-toast"
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice"
 import { fetchAllFilteredProducts, fetchProduct } from "@/store/shop/product-slice"
 import { ArrowUpDownIcon } from "lucide-react"
@@ -31,6 +32,7 @@ const ShoppingListing = () => {
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { toast } = useToast();
 
   function handleFilters(sectionId, currentOptions) {
     let cpyFilters = { ...filters };
@@ -60,10 +62,13 @@ const ShoppingListing = () => {
     dispatch(fetchProduct(productId))
   }
 
-  function handleAddToCart(productId) {
-    dispatch(addToCart({ userId: user?._id, productId, quantity: 1 })).then(data => {
+  function handleAddToCart(productId) {    
+    dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
       if (data?.payload?.success) {
-        dispatch(fetchCartItems(user?._id))
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: 'Product is added to cart'
+        })
       }
     });
   }
