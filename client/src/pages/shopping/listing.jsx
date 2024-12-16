@@ -4,6 +4,7 @@ import ShoppingProductTile from "@/components/shopping/productTile"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice"
 import { fetchAllFilteredProducts, fetchProduct } from "@/store/shop/product-slice"
 import { ArrowUpDownIcon } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -25,6 +26,7 @@ const ShoppingListing = () => {
 
   const dispatch = useDispatch();
   const { products, product } = useSelector(state => state.shopProducts);
+  const { user } = useSelector(state => state.auth)
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,6 +58,14 @@ const ShoppingListing = () => {
 
   function handleGetProductDetails(productId) {
     dispatch(fetchProduct(productId))
+  }
+
+  function handleAddToCart(productId) {
+    dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id))
+      }
+    });
   }
 
   useEffect(() => {
@@ -114,7 +124,7 @@ const ShoppingListing = () => {
         <div className="grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {
             products && products.length > 0 ?
-              products.map(product => <ShoppingProductTile handleGetProductDetails={handleGetProductDetails} key={product._id} product={product} />) : null
+              products.map(product => <ShoppingProductTile handleGetProductDetails={handleGetProductDetails} key={product._id} product={product} handleAddToCart={handleAddToCart} />) : null
           }
         </div>
       </div>
