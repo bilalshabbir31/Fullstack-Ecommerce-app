@@ -62,7 +62,7 @@ const ShoppingListing = () => {
     dispatch(fetchProduct(productId))
   }
 
-  function handleAddToCart(productId) {    
+  function handleAddToCart(productId) {
     dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
