@@ -1,7 +1,7 @@
 import Cart from "../../models/Cart.js";
 import Product from "../../models/Product.js";
 
-const addToCart = async (req, res) => {
+const addItemToCart = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
     if (!userId || !productId || quantity <= 0) {
@@ -216,4 +216,4 @@ const deleteCartItems = async (req, res) => {
   }
 };
 
-export { addToCart, fetchCartItems, updateCartItems, deleteCartItems };
+export { addItemToCart, fetchCartItems, updateCartItems, deleteCartItems };
