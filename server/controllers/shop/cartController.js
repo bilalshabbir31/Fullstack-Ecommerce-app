@@ -55,11 +55,9 @@ const fetchCartItems = async (req, res) => {
       });
     }
     const cart = await Cart.findOne({ userId }).populate({
-      path: "item.productId",
+      path: "items.productId",
       select: "image title price salePrice",
     });
-
-    console.log(cart);
 
     if (!cart) {
       return res.status(404).json({
@@ -69,7 +67,6 @@ const fetchCartItems = async (req, res) => {
     }
 
     const validItems = cart.items.filter((item) => item.productId);
-    console.log(validItems);
 
     if (validItems.length < cart.items.length) {
       cart.items = validItems;
@@ -84,8 +81,6 @@ const fetchCartItems = async (req, res) => {
       salePrice: item.productId.salePrice,
       quantity: item.quantity,
     }));
-
-    console.log(populateCartItems);
 
     res.status(200).json({
       success: true,
