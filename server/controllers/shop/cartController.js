@@ -100,7 +100,7 @@ const fetchCartItems = async (req, res) => {
 
 const updateCartItems = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.params;
+    const { userId, productId, quantity } = req.body;
     if (!userId || !productId) {
       return res.status(400).json({
         success: false,
