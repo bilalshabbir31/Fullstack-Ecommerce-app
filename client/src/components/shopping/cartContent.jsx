@@ -1,16 +1,34 @@
 import { Minus, Plus, Trash } from "lucide-react"
 import { Button } from "../ui/button"
 import { useDispatch, useSelector } from "react-redux"
-import { deleteCartItem } from "@/store/shop/cart-slice";
+import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
+import { useToast } from "@/hooks/use-toast";
 
 const CartContent = ({ cartItem }) => {
 
   const { user } = useSelector(state => state.auth);
 
   const dispatch = useDispatch();
+  const { toast } = useToast()
 
-  function handleCartItemDelete(cartItem) {
-    dispatch(deleteCartItem({ userId: user.id, productId: cartItem.productId }));
+  function handleCartItemDelete(item) {
+    dispatch(deleteCartItem({ userId: user?.id, productId: item?.productId })).then(data => {
+      if (data?.payload?.success) {
+        toast({
+          title: 'Cart item is deleted Successfully'
+        })
+      }
+    });
+  }
+
+  function handleUpdateQuantity(item, type) {
+    dispatch(updateCartQuantity({ userId: user?.id, productId: item?.productId, quantity: type === "plus" ? item?.quantity + 1 : item?.quantity - 1 })).then(data => {
+      if (data?.payload?.success) {
+        toast({
+          title: 'Cart item is updated Successfully'
+        })
+      }
+    })
   }
 
   return (
@@ -19,12 +37,12 @@ const CartContent = ({ cartItem }) => {
       <div className="flex-1">
         <h3 className="font-extrabold">{cartItem?.title}</h3>
         <div className="flex items-center mt-1 gap-2">
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+          <Button disabled={cartItem.quantity === 1} onClick={() => handleUpdateQuantity(cartItem, 'minus')} variant="outline" size="icon" className="h-8 w-8 rounded-full">
             <Minus className="w-4 h-4" />
             <span className="sr-only">Decrease</span>
           </Button>
           <span className="font-semibold">{cartItem?.quantity}</span>
-          <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+          <Button onClick={() => handleUpdateQuantity(cartItem, 'plus')} variant="outline" size="icon" className="h-8 w-8 rounded-full">
             <Plus className="w-4 h-4" />
             <span className="sr-only">Increase</span>
           </Button>
