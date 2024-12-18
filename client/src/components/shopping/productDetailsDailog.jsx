@@ -4,8 +4,28 @@ import { Button } from "../ui/button"
 import { Dialog, DialogContent } from "../ui/dialog"
 import { Separator } from "../ui/separator"
 import { Input } from "../ui/input"
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice"
+import { useToast } from "@/hooks/use-toast"
+import { useDispatch, useSelector } from "react-redux"
 
 const ProductDetailsDailog = ({ open, setOpen, product }) => {
+
+  const { user } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+
+  function handleAddToCart(productId) {
+    dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: 'Product is added to cart'
+        })
+      }
+    });
+  }
+
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:mx-w-[80vw] lg:max-w-[70vw]">
@@ -32,7 +52,7 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
             <span className="text-muted-foreground">(4.5)</span>
           </div>
           <div className="mt-5 mb-5">
-            <Button className="w-full">Add to Cart</Button>
+            <Button className="w-full" onClick={() => handleAddToCart(product?._id)}>Add to Cart</Button>
           </div>
           <Separator />
           <div className="max-h-[300px] overflow-auto">
@@ -47,7 +67,7 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
                     <h3 className="font-bold">Muhammad Bilal</h3>
                   </div>
                   <div className="flex items-center gap-0.5">
-                    <StarIcon className="w-5 h-5 fill-primary"/>
+                    <StarIcon className="w-5 h-5 fill-primary" />
                     <StarIcon className="w-5 h-5 fill-primary" />
                     <StarIcon className="w-5 h-5 fill-primary" />
                     <StarIcon className="w-5 h-5 fill-primary" />
