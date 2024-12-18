@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllFilteredProducts } from '@/store/shop/product-slice';
 import ShoppingProductTile from '@/components/shopping/productTile';
+import { useNavigate } from 'react-router-dom';
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -31,8 +32,17 @@ const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products } = useSelector(state => state.shopProducts)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const slides = [bannerOne, bannerTwo, bannerThree];
 
-  const slides = [bannerOne, bannerTwo, bannerThree]
+  function handleNavigateToListingPage(category, type) {
+    sessionStorage.removeItem('filters')
+    const currentFilter = {
+      [type]: [category.id]
+    }
+    sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+    navigate('/shop/listing');
+  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -63,7 +73,7 @@ const ShoppingHome = () => {
           <h2 className='text-3xl font-bold text-center mb-8'>Shop by Category</h2>
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
             {
-              categoriesWithIcon.map(item => <Card key={item.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+              categoriesWithIcon.map(item => <Card onClick={() => handleNavigateToListingPage(item, 'category')} key={item.id} className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <item.icon className='w-12 h-12 mb-4 text-primary' />
                   <span className='font-bold'>{item.label}</span>
