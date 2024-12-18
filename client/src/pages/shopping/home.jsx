@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import bannerOne from '../../assets/banner-1.webp';
 import bannerTwo from '../../assets/banner-2.webp';
 import bannerThree from '../../assets/banner-3.webp';
-import { BabyIcon, ChevronLeftIcon, ChevronRightIcon, CloudLightningIcon, ShirtIcon, UmbrellaIcon, WatchIcon } from 'lucide-react';
+import { Airplay, BabyIcon, ChevronLeftIcon, ChevronRightIcon, CloudLightningIcon, Heater, Images, Shirt, ShirtIcon, ShoppingBasket, UmbrellaIcon, WashingMachine, WatchIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,15 @@ const categoriesWithIcon = [
   { id: "accessories", label: "Accessories", icon: WatchIcon },
   { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
 ];
+
+const brandWithIcon = [
+  { id: "nike", label: "Nike", icon: Shirt },
+  { id: "adidas", label: "Adidas", icon: WashingMachine },
+  { id: "puma", label: "Puma", icon: ShoppingBasket },
+  { id: "levi", label: "Levi's", icon: Airplay },
+  { id: "zara", label: "Zara", icon: Images },
+  { id: "h&m", label: "H&M", icon: Heater },
+]
 
 const ShoppingHome = () => {
 
@@ -55,6 +64,21 @@ const ShoppingHome = () => {
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
             {
               categoriesWithIcon.map(item => <Card key={item.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  <item.icon className='w-12 h-12 mb-4 text-primary' />
+                  <span className='font-bold'>{item.label}</span>
+                </CardContent>
+              </Card>)
+            }
+          </div>
+        </div>
+      </section>
+      <section className='py-12 bg-gray-50'>
+        <div className='container mx-auto px-4'>
+          <h2 className='text-3xl font-bold text-center mb-8'>Shop by Brand</h2>
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4'>
+            {
+              brandWithIcon.map(item => <Card key={item.id} className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <item.icon className='w-12 h-12 mb-4 text-primary' />
                   <span className='font-bold'>{item.label}</span>
