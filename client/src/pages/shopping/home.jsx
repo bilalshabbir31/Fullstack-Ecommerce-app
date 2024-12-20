@@ -6,9 +6,12 @@ import { Airplay, BabyIcon, ChevronLeftIcon, ChevronRightIcon, CloudLightningIco
 import { Card, CardContent } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllFilteredProducts } from '@/store/shop/product-slice';
+import { fetchAllFilteredProducts, fetchProduct } from '@/store/shop/product-slice';
 import ShoppingProductTile from '@/components/shopping/productTile';
 import { useNavigate } from 'react-router-dom';
+import { addToCart, fetchCartItems } from '@/store/shop/cart-slice';
+import { useToast } from '@/hooks/use-toast';
+import ProductDetailsDailog from '@/components/shopping/productDetailsDailog';
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -30,9 +33,12 @@ const brandWithIcon = [
 const ShoppingHome = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { products } = useSelector(state => state.shopProducts)
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { products, product } = useSelector(state => state.shopProducts);
+  const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const slides = [bannerOne, bannerTwo, bannerThree];
 
   function handleNavigateToListingPage(category, type) {
@@ -42,6 +48,21 @@ const ShoppingHome = () => {
     }
     sessionStorage.setItem('filters', JSON.stringify(currentFilter));
     navigate('/shop/listing');
+  }
+
+  function handleGetProductDetails(productId) {
+    dispatch(fetchProduct(productId))
+  }
+
+  function handleAddToCart(productId) {
+    dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: 'Product is added to cart'
+        })
+      }
+    });
   }
 
   useEffect(() => {
@@ -54,6 +75,12 @@ const ShoppingHome = () => {
   useEffect(() => {
     dispatch(fetchAllFilteredProducts({ filtersParams: {}, sortParams: 'price-lowtohigh' }));
   }, []);
+
+  useEffect(() => {
+    if (product !== null) {
+      setOpenDetailsDialog(true)
+    }
+  }, [product]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -104,12 +131,13 @@ const ShoppingHome = () => {
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
             {
               products && products.length > 0 ?
-                products.map(product => <ShoppingProductTile key={product._id} product={product} />)
+                products.map(product => <ShoppingProductTile handleAddToCart={handleAddToCart} handleGetProductDetails={handleGetProductDetails} key={product._id} product={product} />)
                 : null
             }
           </div>
         </div>
       </section>
+      <ProductDetailsDailog open={openDetailsDialog} setOpen={setOpenDetailsDialog} product={product} />
     </div>
   )
 }
