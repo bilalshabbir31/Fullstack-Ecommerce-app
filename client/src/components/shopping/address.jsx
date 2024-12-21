@@ -92,7 +92,7 @@ const Address = () => {
 
   return (
     <Card>
-      <div className="mb-5 p-3 grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+      <div className="mb-5 p-3 grid grid-col-1 sm:grid-cols-2 gap-2">
         {
           address && address.length > 0 ?
             address.map(item => <AddressCard key={item?._id} addressInfo={item} handleDeleteAddress={handleDeleteAddress} handleEditAddress={handleEditAddress} />) : null
