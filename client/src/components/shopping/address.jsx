@@ -5,6 +5,7 @@ import { addressFormControls } from "@/config";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewAddress, deleteAddress, editAddress, fetchAllAddresses } from "@/store/shop/address-slice";
 import AddressCard from "./addressCard";
+import { useToast } from "@/hooks/use-toast";
 
 const initialFormData = {
   address: '',
@@ -21,15 +22,29 @@ const Address = () => {
   const { user } = useSelector(state => state.auth);
   const { address } = useSelector(state => state.shopAddress);
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   function handleSubmit(event) {
     event.preventDefault();
+    console.log(address.length);
+    
+    if (address.length >= 3) {
+      setFormData(initialFormData);
+      toast({
+        title: 'You can add max 3 address',
+        variant: 'destructive'
+      });
+      return;
+    }
 
     currentEditedId !== null ? dispatch(editAddress({ userId: user?.id, addressId: currentEditedId, formData })).then(data => {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
         setCurrentEditedId(null);
         setFormData(initialFormData);
+        toast({
+          title: 'Address updated Successfully'
+        });
       }
     }) : dispatch(addNewAddress({
       ...formData,
@@ -38,6 +53,9 @@ const Address = () => {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
         setFormData(initialFormData);
+        toast({
+          title: 'Address added Successfully'
+        });
       }
     })
   }
@@ -50,6 +68,9 @@ const Address = () => {
     dispatch(deleteAddress({ userId: user?.id, addressId: address?._id })).then(data => {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
+        toast({
+          title: 'Address deleted Successfully'
+        });
       }
     })
   }
