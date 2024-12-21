@@ -21,7 +21,7 @@ const addAddress = async (req, res) => {
 
     await newAddress.save();
 
-    res.status(201).json({ sucess: true, data: newAddress });
+    res.status(201).json({ success: true, data: newAddress });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -49,7 +49,7 @@ const fetchAllAddress = async (req, res) => {
       });
     }
 
-    res.status(200).json({ sucess: true, data: addresses });
+    res.status(200).json({ success: true, data: addresses });
   } catch (error) {
     console.log(error);
     res.status(500).json({
