@@ -27,7 +27,7 @@ const Address = () => {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (address.length >= 3) {
+    if (address.length >= 3 && currentEditedId === null) {
       setFormData(initialFormData);
       toast({
         title: 'You can add max 3 address',
