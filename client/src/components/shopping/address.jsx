@@ -26,8 +26,7 @@ const Address = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(address.length);
-    
+
     if (address.length >= 3) {
       setFormData(initialFormData);
       toast({
