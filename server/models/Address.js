@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema(
   {
-    userId: { String, required: true },
-    address: { String, required: true },
-    city: { String, required: true },
-    pincode: { String, required: true },
-    phone: { String, required: true },
-    notes: { String, required: false },
+    userId: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    pincode: { type: String, required: true },
+    phone: { type: String, required: true },
+    notes: { type: String, required: false },
   },
   {
     timestamps: true,
