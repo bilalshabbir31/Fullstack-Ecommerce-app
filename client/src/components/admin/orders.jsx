@@ -1,8 +1,14 @@
+import { useState } from "react"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Dialog } from "../ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
+import AdminOrderDetailsDailog from "./OrderDetailsDailog"
 
 const Orders = () => {
+
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
   return (
     <Card>
       <CardHeader>
@@ -28,7 +34,10 @@ const Orders = () => {
               <TableCell>In Process</TableCell>
               <TableCell>$1000</TableCell>
               <TableCell>
-                <Button>View Details</Button>
+                <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
+                  <Button onClick={() => setOpenDetailsDialog(true)}>View Details</Button>
+                  <AdminOrderDetailsDailog />
+                </Dialog>
               </TableCell>
             </TableRow>
           </TableBody>
