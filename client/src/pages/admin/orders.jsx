@@ -1,7 +1,10 @@
+import Orders from "@/components/admin/orders"
 
 const AdminOrders = () => {
   return (
-    <div>AdminOrders</div>
+    <div>
+      <Orders />
+    </div>
   )
 }
 
