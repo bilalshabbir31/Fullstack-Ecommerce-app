@@ -3,9 +3,9 @@ import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Dialog } from "../ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
-import ShoppingOrderDetailsDailog from "./OrderDetailsDailog"
+import AdminOrderDetailsDailog from "./OrderDetailsDailog"
 
-const ShoppingOrders = () => {
+const Orders = () => {
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
@@ -36,7 +36,7 @@ const ShoppingOrders = () => {
               <TableCell>
                 <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
                   <Button onClick={() => setOpenDetailsDialog(true)}>View Details</Button>
-                  <ShoppingOrderDetailsDailog />
+                  <AdminOrderDetailsDailog />
                 </Dialog>
               </TableCell>
             </TableRow>
@@ -47,4 +47,4 @@ const ShoppingOrders = () => {
   )
 }
 
-export default ShoppingOrders
+export default Orders
