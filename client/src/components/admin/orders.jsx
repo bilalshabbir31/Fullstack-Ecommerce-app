@@ -2,7 +2,7 @@ import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 
-const AdminOrders = () => {
+const Orders = () => {
   return (
     <Card>
       <CardHeader>
@@ -38,4 +38,4 @@ const AdminOrders = () => {
   )
 }
 
-export default AdminOrders
+export default Orders
