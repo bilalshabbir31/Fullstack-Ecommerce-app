@@ -146,4 +146,9 @@ const getOrder = async (req, res) => {
   }
 };
 
-export { createCheckoutSession, checkoutSuccess, allUserOrders, getOrder };
+export {
+  createCheckoutSession,
+  checkoutSuccess,
+  fetchAllOrdersByUserId,
+  getOrder,
+};
