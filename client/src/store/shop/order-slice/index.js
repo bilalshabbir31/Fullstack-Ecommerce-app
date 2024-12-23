@@ -18,6 +18,17 @@ export const createNewOrder = createAsyncThunk(
   }
 );
 
+export const capturePayment = createAsyncThunk(
+  "/order/capturePayment",
+  async ({ sessionId, orderId }) => {
+    const response = await axiosObj.post("/shop/order/checkout-success", {
+      sessionId,
+      orderId,
+    });
+    return response.data;
+  }
+);
+
 const shoppingOrderSlice = createSlice({
   name: "shoppingOrderSlice",
   initialState,
@@ -28,14 +39,15 @@ const shoppingOrderSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createNewOrder.fulfilled, (state, action) => {
-        state.isLoading = false, 
-        state.sessionId = action.payload.sessionId;
+        (state.isLoading = false), (state.sessionId = action.payload.sessionId);
         state.orderId = action.payload.orderId;
-        sessionStorage.setItem("currentOrderId", JSON.stringify(action.payload.orderId));
+        sessionStorage.setItem(
+          "currentOrderId",
+          JSON.stringify(action.payload.orderId)
+        );
       })
       .addCase(createNewOrder.rejected, (state) => {
-        state.isLoading = false,
-        state.sessionId = null;
+        (state.isLoading = false), (state.sessionId = null);
         state.orderId = null;
       });
   },
