@@ -23,6 +23,23 @@ const ShoppingCheckout = () => {
   ) * currentItem.quantity, 0) : 0
 
   async function handleInitialStripePayment() {
+
+    if (cartItems?.items?.length === 0) {
+      toast({
+        title: 'Please add some items to cart',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    if (currentSelectedAddress === null) {
+      toast({
+        title: 'Please select one address to proceed',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     const orderData = {
       userId: user?.id,
       cartId: cartItems?._id,
@@ -52,7 +69,6 @@ const ShoppingCheckout = () => {
     const stripe = await stripePromise;
 
     dispatch(createNewOrder(orderData)).then(async (data) => {
-      console.log(data.payload);
       if (data?.payload?.success) {
         const result = await stripe.redirectToCheckout({
           sessionId: data?.payload?.sessionId,
