@@ -15,7 +15,7 @@ const initialFormData = {
   notes: '',
 }
 
-const Address = () => {
+const Address = ({ setCurrentSelectedAddress }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
@@ -95,7 +95,7 @@ const Address = () => {
       <div className="mb-5 p-3 grid grid-col-1 sm:grid-cols-2 gap-2">
         {
           address && address.length > 0 ?
-            address.map(item => <AddressCard key={item?._id} addressInfo={item} handleDeleteAddress={handleDeleteAddress} handleEditAddress={handleEditAddress} />) : null
+            address.map(item => <AddressCard key={item?._id} addressInfo={item} setCurrentSelectedAddress={setCurrentSelectedAddress} handleDeleteAddress={handleDeleteAddress} handleEditAddress={handleEditAddress} />) : null
         }
       </div>
       <CardHeader>
