@@ -26,6 +26,7 @@ const orderSchema = new mongoose.Schema({
   orderDate: Date,
   orderUpdateDate: Date,
   stripeSessionId: String,
+  paymentId: String,
 });
 
 const Order = mongoose.model("Order", orderSchema);
