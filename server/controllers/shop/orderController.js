@@ -16,15 +16,11 @@ const createCheckoutSession = async (req, res) => {
       paymentId,
     } = req.body;
 
-    if (
-      !cartItems ||
-      !Array.isArray(cartItems.items) ||
-      cartItems.items.length === 0
-    ) {
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
       return res.status(400).json({ error: "Invalid or empty products array" });
     }
 
-    const lineItems = cartItems.items.map((product) => {
+    const lineItems = cartItems.map((product) => {
       return {
         price_data: {
           currency: "usd",
@@ -32,7 +28,7 @@ const createCheckoutSession = async (req, res) => {
             name: product.title,
             images: [product.image],
           },
-          unit_amount: product.price.toFixed(2),
+          unit_amount: product.price * 100,
         },
         quantity: product.quantity || 1,
       };
@@ -49,7 +45,7 @@ const createCheckoutSession = async (req, res) => {
       metadata: {
         userId: userId,
         products: JSON.stringify(
-          cartItems.items.map((p) => ({
+          cartItems.map((p) => ({
             id: p.productId,
             title: p.title,
             quantity: p.quantity,
@@ -78,8 +74,9 @@ const createCheckoutSession = async (req, res) => {
 
     await newOrder.save();
 
-
-    res.status(201).json({ success: true, orderId: newOrder._id, session: session.id });
+    res
+      .status(201)
+      .json({ success: true, orderId: newOrder._id, sessionId: session.id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
