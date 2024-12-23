@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { checkAuth } from "./store/auth-slice"
 import { Skeleton } from "./components/ui/skeleton"
+import PurchaseSuccessPage from "./pages/shopping/purchaseSuccess"
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
+          <Route path="purchase-success" element={<PurchaseSuccessPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route path="/unauth-page" element={<UnAuth />} />
