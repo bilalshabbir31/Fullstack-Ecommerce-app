@@ -13,7 +13,7 @@ const createCheckoutSession = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId,
+      cartId,
     } = req.body;
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
@@ -68,7 +68,7 @@ const createCheckoutSession = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId,
+      cartId,
       stripeSessionId: session.id,
     });
 

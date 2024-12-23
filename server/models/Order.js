@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
   userId: String,
+  cartId: String,
   cartItems: [
     {
       productId: String,
@@ -26,7 +27,6 @@ const orderSchema = new mongoose.Schema({
   orderDate: Date,
   orderUpdateDate: Date,
   stripeSessionId: String,
-  paymentId: String,
 });
 
 const Order = mongoose.model("Order", orderSchema);
