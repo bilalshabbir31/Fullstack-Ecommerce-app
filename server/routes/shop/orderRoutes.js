@@ -10,6 +10,6 @@ const router = express.Router();
 router.post("/create-checkout-session", createCheckoutSession);
 router.post("/checkout-success", checkoutSuccess);
 router.get("/list/:userId", allUserOrders);
-router.get("/id", getOrder);
+router.get("/:id", getOrder);
 
 export default router;
