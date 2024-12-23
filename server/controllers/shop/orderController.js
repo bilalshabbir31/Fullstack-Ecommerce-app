@@ -6,12 +6,14 @@ const createCheckoutSession = async (req, res) => {
     const {
       userId,
       cartItems,
-      addressInfopaymentMethod,
+      addressInfo,
+      orderStatus,
+      paymentMethod,
       paymentStatus,
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId
+      paymentId,
     } = req.body;
 
     if (
@@ -63,7 +65,9 @@ const createCheckoutSession = async (req, res) => {
     const newOrder = new Order({
       userId,
       cartItems,
-      addressInfopaymentMethod,
+      addressInfo,
+      orderStatus,
+      paymentMethod,
       paymentStatus,
       totalAmount,
       orderDate,
