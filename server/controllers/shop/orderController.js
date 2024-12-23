@@ -116,4 +116,34 @@ const checkoutSuccess = async (req, res) => {
   }
 };
 
-export { createCheckoutSession, checkoutSuccess };
+const allUserOrders = async (req, res) => {
+  try {
+    const {userId} = req.params;
+    const orders = await Order.find({ userId });
+    if (!orders.length) {
+      return res.status(404).json({ succes: false, message: "No orders found" });
+    }
+    res.status(200).json({success: true, data: orders});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id);
+    if (!order) {
+      return res
+        .status(404)
+        .json({ succes: false, message: "No order found" });
+    }
+    res.status(200).json({ success: true, data: order });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export { createCheckoutSession, checkoutSuccess, allUserOrders, getOrder };
