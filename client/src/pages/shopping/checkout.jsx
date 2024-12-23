@@ -53,11 +53,11 @@ const ShoppingCheckout = () => {
 
     dispatch(createNewOrder(orderData)).then(async (data) => {
       console.log(data.payload);
-      if(data?.payload?.success) {
+      if (data?.payload?.success) {
         const result = await stripe.redirectToCheckout({
           sessionId: data?.payload?.sessionId,
         });
-        if(result.error) {
+        if (result.error) {
           toast({
             title: 'Something went wrong',
           })
