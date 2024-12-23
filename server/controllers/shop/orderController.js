@@ -116,14 +116,16 @@ const checkoutSuccess = async (req, res) => {
   }
 };
 
-const allUserOrders = async (req, res) => {
+const fetchAllOrdersByUserId = async (req, res) => {
   try {
-    const {userId} = req.params;
+    const { userId } = req.params;
     const orders = await Order.find({ userId });
     if (!orders.length) {
-      return res.status(404).json({ succes: false, message: "No orders found" });
+      return res
+        .status(404)
+        .json({ succes: false, message: "No orders found" });
     }
-    res.status(200).json({success: true, data: orders});
+    res.status(200).json({ success: true, data: orders });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -135,9 +137,7 @@ const getOrder = async (req, res) => {
     const { id } = req.params;
     const order = await Order.findById(id);
     if (!order) {
-      return res
-        .status(404)
-        .json({ succes: false, message: "No order found" });
+      return res.status(404).json({ succes: false, message: "No order found" });
     }
     res.status(200).json({ success: true, data: order });
   } catch (error) {

@@ -39,8 +39,8 @@ export const getOrder = createAsyncThunk(
   }
 );
 
-export const fetchAllOrders = createAsyncThunk(
-  "/order/fetchAllOrder",
+export const fetchAllOrdersByUserId = createAsyncThunk(
+  "/order/fetchAllOrdersByUserId",
   async (userId) => {
     const response = await axiosObj.post(`/shop/order/list/${userId}`);
     return response.data;
@@ -79,14 +79,14 @@ const shoppingOrderSlice = createSlice({
         state.isLoading = false;
         state.order = null;
       })
-      .addCase(fetchAllOrders.pending, (state) => {
+      .addCase(fetchAllOrdersByUserId.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+      .addCase(fetchAllOrdersByUserId.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orders = action.payload.data;
       })
-      .addCase(fetchAllOrders.rejected, (state) => {
+      .addCase(fetchAllOrdersByUserId.rejected, (state) => {
         state.isLoading = false;
         state.orders = [];
       });
