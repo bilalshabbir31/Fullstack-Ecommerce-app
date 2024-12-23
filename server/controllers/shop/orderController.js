@@ -1,5 +1,6 @@
 import { stripe } from "../../config/stripe.js";
 import Order from "../../models/Order.js";
+import Cart from "../../models/Cart.js";
 
 const createCheckoutSession = async (req, res) => {
   try {
@@ -34,8 +35,6 @@ const createCheckoutSession = async (req, res) => {
       };
     });
 
-    console.log(lineItems);
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
@@ -55,8 +54,6 @@ const createCheckoutSession = async (req, res) => {
         totalAmount: totalAmount,
       },
     });
-
-    console.log(session);
 
     const newOrder = new Order({
       userId,
@@ -85,6 +82,34 @@ const createCheckoutSession = async (req, res) => {
 
 const checkoutSuccess = async (req, res) => {
   try {
+    const { sessionId, orderId } = req.body;
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    let order = await Order.findById(orderId);
+
+    if (session.payment_status !== "paid") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Payment not successful" });
+    }
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+    order.orderUpdateDate = new Date();
+
+    const getCartId = order.cartId;
+    await Cart.findByIdAndDelete(getCartId);
+
+    await order.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Order confirmed", data: order });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
