@@ -15,7 +15,17 @@ export const getOrder = createAsyncThunk("/orders/getOrder", async (id) => {
 export const fetchAllOrders = createAsyncThunk(
   "/orders/fetchAllOrders",
   async () => {
-    const response = await axiosObj.get('/admin/orders/');
+    const response = await axiosObj.get("/admin/orders/");
+    return response.data;
+  }
+);
+
+export const updateOrderStatus = createAsyncThunk(
+  "/orders/updateOrderStatus",
+  async ({ id, orderStatus }) => {
+    const response = await axiosObj.put(`/admin/orders/${id}`, {
+      orderStatus,
+    });
     return response.data;
   }
 );
@@ -51,6 +61,15 @@ const adminOrderSlice = createSlice({
       .addCase(fetchAllOrders.rejected, (state) => {
         state.isLoading = false;
         state.orders = [];
+      })
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateOrderStatus.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });
