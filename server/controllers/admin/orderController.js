@@ -32,13 +32,14 @@ const getOrder = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { orderStatus } = req.body;
+    
     const order = await Order.findById(id);
     if (!order) {
       return res.status(404).json({ succes: false, message: "No order found" });
     }
 
-    await Order.findByIdAndUpdate(id, { orderStatus: status });
+    await Order.findByIdAndUpdate(id, { orderStatus });
 
     res
       .status(200)
