@@ -31,13 +31,10 @@ export const capturePayment = createAsyncThunk(
   }
 );
 
-export const getOrder = createAsyncThunk(
-  "/order/getOrder",
-  async (id) => {
-    const response = await axiosObj.get(`/shop/order/${id}`);
-    return response.data;
-  }
-);
+export const getOrder = createAsyncThunk("/order/getOrder", async (id) => {
+  const response = await axiosObj.get(`/shop/order/${id}`);
+  return response.data;
+});
 
 export const fetchAllOrdersByUserId = createAsyncThunk(
   "/order/fetchAllOrdersByUserId",
@@ -50,7 +47,11 @@ export const fetchAllOrdersByUserId = createAsyncThunk(
 const shoppingOrderSlice = createSlice({
   name: "shoppingOrderSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    resetOrderDetails: (state) => {
+      state.order = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createNewOrder.pending, (state) => {
@@ -73,7 +74,7 @@ const shoppingOrderSlice = createSlice({
       })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.order = action.payload;
+        state.order = action.payload.data;
       })
       .addCase(getOrder.rejected, (state) => {
         state.isLoading = false;
@@ -92,5 +93,7 @@ const shoppingOrderSlice = createSlice({
       });
   },
 });
+
+export const { resetOrderDetails } = shoppingOrderSlice.actions;
 
 export default shoppingOrderSlice.reducer;
