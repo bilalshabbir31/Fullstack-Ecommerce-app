@@ -35,7 +35,7 @@ const ShoppingOrderDetailsDailog = ({ order }) => {
           <div className="flex mt-6 items-center justify-between">
             <p className="font-medium">Order Status</p>
             <Label>
-              <Badge className={`py-1 px-3 ${order?.orderStatus === 'confirmed' ? 'bg-green-500' : 'bg-black'}`}>{order?.orderStatus}</Badge>
+              <Badge className={`py-1 px-3 ${order?.orderStatus === 'confirmed' ? 'bg-green-500' : order?.orderStatus === 'rejected' ? 'bg-red-600' : 'bg-black'}`}>{order?.orderStatus}</Badge>
             </Label>
           </div>
         </div>

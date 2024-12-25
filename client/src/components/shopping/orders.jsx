@@ -54,7 +54,7 @@ const ShoppingOrders = () => {
                   <TableCell>{item?._id}</TableCell>
                   <TableCell>{item?.orderDate.split('T')[0]}</TableCell>
                   <TableCell>
-                    <Badge className={`py-1 px-3 ${item?.orderStatus === 'confirmed' ? 'bg-green-500' : 'bg-black'}`}>{item?.orderStatus}</Badge>
+                    <Badge className={`py-1 px-3 ${item?.orderStatus === 'confirmed' ? 'bg-green-500' : item?.orderStatus === 'rejected' ? 'bg-red-600' : 'bg-black'}`}>{item?.orderStatus}</Badge>
                   </TableCell>
                   <TableCell>${item?.totalAmount}</TableCell>
                   <TableCell>
