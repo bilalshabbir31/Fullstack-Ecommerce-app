@@ -4,7 +4,9 @@ import { DialogContent } from "../ui/dialog"
 import { Label } from "../ui/label"
 import { Separator } from "../ui/separator"
 import { Badge } from "../ui/badge"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchAllOrders, getOrder, updateOrderStatus } from "@/store/admin/order-slice"
+import { useToast } from "@/hooks/use-toast"
 
 const initialFormData = {
   status: ''
@@ -14,9 +16,22 @@ const AdminOrderDetailsDailog = ({ order }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const { user } = useSelector(state => state.auth);
+  const { toast } = useToast();
+  const dispatch = useDispatch();
 
   function handleUpdateStatus(event) {
     event.preventDefault();
+    const { status } = formData;
+    dispatch(updateOrderStatus({ id: order?._id, orderStatus: status })).then(data => {
+      if (data?.payload?.success) {
+        dispatch(getOrder(order?._id));
+        dispatch(fetchAllOrders());
+        setFormData(initialFormData);
+        toast({
+          title: data?.payload?.message
+        })
+      }
+    });
   }
 
   return (
@@ -46,7 +61,7 @@ const AdminOrderDetailsDailog = ({ order }) => {
           <div className="flex mt-6 items-center justify-between">
             <p className="font-medium">Order Status</p>
             <Label>
-              <Badge className={`py-1 px-3 ${order?.orderStatus === 'confirmed' ? 'bg-green-500' : 'bg-black'}`}>{order?.orderStatus}</Badge>
+              <Badge className={`py-1 px-3 ${order?.orderStatus === 'confirmed' ? 'bg-green-500' : order?.orderStatus === 'rejected' ? 'bg-red-600' : 'bg-black'}`}>{order?.orderStatus}</Badge>
             </Label>
           </div>
         </div>
