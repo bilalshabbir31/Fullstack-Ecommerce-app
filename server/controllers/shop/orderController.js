@@ -1,6 +1,7 @@
 import { stripe } from "../../config/stripe.js";
 import Order from "../../models/Order.js";
 import Cart from "../../models/Cart.js";
+import Product from "../../models/Product.js";
 
 const createCheckoutSession = async (req, res) => {
   try {
@@ -106,6 +107,21 @@ const checkoutSuccess = async (req, res) => {
     await Cart.findByIdAndDelete(getCartId);
 
     await order.save();
+
+    for (let item of order.cartItems) {
+      let product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          succes: false,
+          message: `Not enough Stock for this Product ${product.title}`,
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
 
     res
       .status(200)
