@@ -57,7 +57,9 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
             <span className="text-muted-foreground">(4.5)</span>
           </div>
           <div className="mt-5 mb-5">
-            <Button className="w-full" onClick={() => handleAddToCart(product?._id)}>Add to Cart</Button>
+            {
+              product?.totalStock === 0 ? <Button className="w-full opacity-60 cursor-not-allowed">Out of Stock</Button> : <Button className="w-full" onClick={() => handleAddToCart(product?._id)}>Add to Cart</Button>
+            }
           </div>
           <Separator />
           <div className="max-h-[300px] overflow-auto">
