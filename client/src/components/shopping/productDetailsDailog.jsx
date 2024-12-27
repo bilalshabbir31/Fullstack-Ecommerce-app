@@ -12,10 +12,26 @@ import { setProductDetails } from "@/store/shop/product-slice"
 const ProductDetailsDailog = ({ open, setOpen, product }) => {
 
   const { user } = useSelector(state => state.auth);
+  const { cartItems } = useSelector(state => state.shopCart);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  function handleAddToCart(productId) {
+  function handleAddToCart(productId, totalStock) {
+    let items = cartItems.items || [];
+    if (items.length) {
+      const indexOfCurrentItem = items.findIndex(item => item.productId === productId)
+      if (indexOfCurrentItem > -1) {
+        const quantity = items[indexOfCurrentItem].quantity;
+
+        if (quantity + 1 > totalStock) {
+          toast({
+            title: `Only ${quantity} quantity can be added for this item`,
+            variant: 'destructive'
+          })
+          return;
+        }
+      }
+    }
     dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
@@ -58,7 +74,7 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
           </div>
           <div className="mt-5 mb-5">
             {
-              product?.totalStock === 0 ? <Button className="w-full opacity-60 cursor-not-allowed">Out of Stock</Button> : <Button className="w-full" onClick={() => handleAddToCart(product?._id)}>Add to Cart</Button>
+              product?.totalStock === 0 ? <Button className="w-full opacity-60 cursor-not-allowed">Out of Stock</Button> : <Button className="w-full" onClick={() => handleAddToCart(product?._id, product?.totalStock)}>Add to Cart</Button>
             }
           </div>
           <Separator />

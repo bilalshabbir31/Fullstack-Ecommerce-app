@@ -28,6 +28,7 @@ const ShoppingListing = () => {
   const dispatch = useDispatch();
   const { products, product } = useSelector(state => state.shopProducts);
   const { user } = useSelector(state => state.auth)
+  const { cartItems } = useSelector(state => state.shopCart)
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -63,7 +64,22 @@ const ShoppingListing = () => {
     dispatch(fetchProduct(productId))
   }
 
-  function handleAddToCart(productId) {
+  function handleAddToCart(productId, totalStock) {
+    let items = cartItems.items || [];
+    if (items.length) {
+      const indexOfCurrentItem = items.findIndex(item => item.productId === productId)
+      if (indexOfCurrentItem > -1) {
+        const quantity = items[indexOfCurrentItem].quantity;
+
+        if (quantity + 1 > totalStock) {
+          toast({
+            title: `Only ${quantity} quantity can be added for this item`,
+            variant: 'destructive'
+          })
+          return;
+        }
+      }
+    }
     dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(data => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
