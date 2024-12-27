@@ -22,6 +22,7 @@ import { Skeleton } from "./components/ui/skeleton"
 import StripeReturnPage from "./pages/shopping/stripeReturn"
 import PaymentSuccessPage from "./pages/shopping/paymentSuccess"
 import PaymentCancelPage from "./pages/shopping/paymentCancel"
+import SearchProducts from "./pages/shopping/search"
 
 function App() {
 
@@ -68,6 +69,7 @@ function App() {
           <Route path="stripe-return" element={<StripeReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="payment-cancel" element={<PaymentCancelPage />} />
+          <Route path="search" element={<SearchProducts />} />
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route path="/unauth-page" element={<UnAuth />} />

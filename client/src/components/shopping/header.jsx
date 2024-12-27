@@ -20,7 +20,7 @@ function MenuItems() {
 
   function handleNavigate(menuItem) {
     sessionStorage.removeItem('filters');
-    const currentFilter = menuItem.id !== "home" && menuItem.id !== "products" ? {
+    const currentFilter = menuItem.id !== "home" && menuItem.id !== "products" && menuItem.id !== "search" ? {
       category: [menuItem.id]
     } : null
     sessionStorage.setItem('filters', JSON.stringify(currentFilter));
