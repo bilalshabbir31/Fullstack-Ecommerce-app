@@ -39,7 +39,7 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddToCart
       <CardFooter>
         {
           product?.totalStock === 0 ? <Button className="w-full opacity-60 cursor-not-allowed">Out Of Stock</Button> :
-            <Button onClick={() => handleAddToCart(product?._id)} className="w-full">Add to Cart</Button>
+            <Button onClick={() => handleAddToCart(product?._id, product?.totalStock)} className="w-full">Add to Cart</Button>
         }
       </CardFooter>
     </Card>
