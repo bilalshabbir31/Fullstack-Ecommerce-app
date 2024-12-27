@@ -27,14 +27,14 @@ const ShoppingListing = () => {
 
   const dispatch = useDispatch();
   const { products, product } = useSelector(state => state.shopProducts);
-  const { user } = useSelector(state => state.auth)
-  const { cartItems } = useSelector(state => state.shopCart)
+  const { user } = useSelector(state => state.auth);
+  const { cartItems } = useSelector(state => state.shopCart);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { toast } = useToast();
-  const categorySearchParam = searchParams.get('category')
+  const categorySearchParam = searchParams.get('category');
 
   function handleFilters(sectionId, currentOptions) {
     let cpyFilters = { ...filters };
@@ -93,7 +93,7 @@ const ShoppingListing = () => {
   useEffect(() => {
     setSort('price-lowtohigh');
     setFilters(JSON.parse(sessionStorage.getItem('filters')) || {});
-  }, [categorySearchParam])
+  }, [categorySearchParam]);
 
   useEffect(() => {
     if (filters !== null && sort !== null) {
@@ -106,13 +106,13 @@ const ShoppingListing = () => {
       const queryString = createSearchParamsHelper(filters);
       setSearchParams(new URLSearchParams(queryString))
     }
-  }, [filters])
+  }, [filters]);
 
   useEffect(() => {
     if (product !== null) {
       setOpenDetailsDialog(true)
     }
-  }, [product])
+  }, [product]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
