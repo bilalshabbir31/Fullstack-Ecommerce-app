@@ -7,7 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 const CartContent = ({ cartItem }) => {
 
   const { user } = useSelector(state => state.auth);
-
+  const { cartItems } = useSelector(state => state.shopCart);
+  const { products } = useSelector(state => state.shopProducts);
   const dispatch = useDispatch();
   const { toast } = useToast()
 
@@ -21,8 +22,27 @@ const CartContent = ({ cartItem }) => {
     });
   }
 
-  function handleUpdateQuantity(item, type) {
-    dispatch(updateCartQuantity({ userId: user?.id, productId: item?.productId, quantity: type === "plus" ? item?.quantity + 1 : item?.quantity - 1 })).then(data => {
+  function handleUpdateQuantity(cart, type) {
+    if (type === 'plus') {
+      let items = cartItems.items || [];
+      if (items.length) {
+        const indexOfCurrentCartItem = items.findIndex(item => item.productId === cart.productId)
+        const indexOfCurrentProduct = products.findIndex(product => product?._id === cart?.productId)
+        const totalStock = products[indexOfCurrentProduct].totalStock
+        if (indexOfCurrentCartItem > -1) {
+          const quantity = items[indexOfCurrentCartItem].quantity;
+
+          if (quantity + 1 > totalStock) {
+            toast({
+              title: `Only ${quantity} quantity can be added for this item`,
+              variant: 'destructive'
+            })
+            return;
+          }
+        }
+      }
+    }
+    dispatch(updateCartQuantity({ userId: user?.id, productId: cart?.productId, quantity: type === "plus" ? cart?.quantity + 1 : cart?.quantity - 1 })).then(data => {
       if (data?.payload?.success) {
         toast({
           title: 'Cart item is updated Successfully'
