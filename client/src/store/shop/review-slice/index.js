@@ -8,10 +8,8 @@ const initialState = {
 
 export const addReview = createAsyncThunk(
   "/review/addReview",
-  async (data) => {
-    const response = await axiosObj.post("/shop/review/", {
-      data,
-    });
+  async (formData) => {
+    const response = await axiosObj.post("/shop/review/", formData);
     return response?.data;
   }
 );
@@ -33,13 +31,13 @@ const reviewSlice = createSlice({
       .addCase(fetchReviews.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchReviews.fulfilled, (state,action) => {
+      .addCase(fetchReviews.fulfilled, (state, action) => {
         state.isLoading = false;
         state.reviews = action.payload.data;
       })
       .addCase(fetchReviews.rejected, (state) => {
         state.isLoading = false;
-        state.reviews = []
+        state.reviews = [];
       })
       .addCase(addReview.pending, (state) => {
         state.isLoading = true;
