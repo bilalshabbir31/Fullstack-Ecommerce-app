@@ -1,6 +1,6 @@
-import Review from "../../models/Review";
-import Product from "../../models/Product";
-import Order from "../../models/Order";
+import Review from "../../models/Review.js";
+import Product from "../../models/Product.js";
+import Order from "../../models/Order.js";
 
 const addProductReview = async (req, res) => {
   try {
