@@ -11,6 +11,7 @@ import shopAddressRouter from "./routes/shop/addressRoutes.js";
 import shopOrderRouter from "./routes/shop/orderRoutes.js";
 import adminOrderRouter from "./routes/admin/orderRoutes.js";
 import shopSearchRouter from "./routes/shop/searchRoutes.js";
+import shopReviewRouter from "./routes/shop/reviewRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -43,5 +44,6 @@ app.use("/api/shop/cart", shopCartRouter);
 app.use("/api/shop/address", shopAddressRouter);
 app.use("/api/shop/order", shopOrderRouter);
 app.use("/api/shop/search", shopSearchRouter);
+app.use("/api/shop/review", shopReviewRouter);
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
