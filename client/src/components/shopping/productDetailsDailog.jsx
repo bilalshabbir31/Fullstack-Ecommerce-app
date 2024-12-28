@@ -8,9 +8,15 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice"
 import { useToast } from "@/hooks/use-toast"
 import { useDispatch, useSelector } from "react-redux"
 import { setProductDetails } from "@/store/shop/product-slice"
+import { Label } from "../ui/label"
+import StartRating from "../common/startRating"
+import { useState } from "react"
+import { addReview } from "@/store/shop/review-slice"
 
 const ProductDetailsDailog = ({ open, setOpen, product }) => {
 
+  const [reviewMsg, setReviewMsg] = useState('');
+  const [rating, setRating] = useState(0);
   const { user } = useSelector(state => state.auth);
   const { cartItems } = useSelector(state => state.shopCart);
   const dispatch = useDispatch();
@@ -45,6 +51,26 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
   function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
+    setRating(0);
+    setReviewMsg('');
+  }
+
+  function handleRatingChange(value) {
+    setRating(value);
+  }
+
+  function handleAddReview() {
+    dispatch(addReview({
+      productId: product?._id,
+      userId: user?.id,
+      userName: user?.userName,
+      reviewMessage: reviewMsg,
+      reviewValue: rating,
+    })).then(data => {
+      console.log(data);
+      setRating(0);
+      setReviewMsg('');
+    })
   }
 
   return (
@@ -100,9 +126,13 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
                 </div>
               </div>
             </div>
-            <div className="mt-6 gap-2 flex">
-              <Input placeholder="Write a review" />
-              <Button>Submit</Button>
+            <div className="mt-10 flex-col gap-2 flex">
+              <Label>Write a review</Label>
+              <div className="flex gap-1 ">
+                <StartRating handleRatingChange={handleRatingChange} rating={rating} />
+              </div>
+              <Input name="reviewMessage" value={reviewMsg} onChange={(event) => setReviewMsg(event.target.value)} placeholder="Write a review" />
+              <Button disabled={reviewMsg.trim() === ''} onClick={handleAddReview}>Submit</Button>
             </div>
           </div>
         </div>
