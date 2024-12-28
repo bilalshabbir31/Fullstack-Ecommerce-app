@@ -44,7 +44,7 @@ const reviewSlice = createSlice({
       .addCase(addReview.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(addReview.pending, (state) => {
+      .addCase(addReview.fulfilled, (state) => {
         state.isLoading = false;
       })
       .addCase(addReview.rejected, (state) => {
