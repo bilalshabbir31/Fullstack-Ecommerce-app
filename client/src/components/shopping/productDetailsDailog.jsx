@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { setProductDetails } from "@/store/shop/product-slice"
 import { Label } from "../ui/label"
 import StartRating from "../common/startRating"
-import { useState } from "react"
-import { addReview } from "@/store/shop/review-slice"
+import { useEffect, useState } from "react"
+import { addReview, fetchReviews } from "@/store/shop/review-slice"
 
 const ProductDetailsDailog = ({ open, setOpen, product }) => {
 
@@ -19,6 +19,7 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
   const [rating, setRating] = useState(0);
   const { user } = useSelector(state => state.auth);
   const { cartItems } = useSelector(state => state.shopCart);
+  const { reviews } = useSelector(state => state.shopReview);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
@@ -67,11 +68,22 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
       reviewMessage: reviewMsg,
       reviewValue: rating,
     })).then(data => {
-      console.log(data);
+      if (data?.success?.payload) {
+        dispatch(fetchReviews(product?._id));
+        toast({
+          title: 'Review Added Successfully!'
+        })
+      }
       setRating(0);
       setReviewMsg('');
     })
   }
+
+  useEffect(() => {
+    if (product !== null) {
+      dispatch(fetchReviews(product?._id));
+    }
+  }, [product]);
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
