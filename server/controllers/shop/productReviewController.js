@@ -31,6 +31,7 @@ const addProductReview = async (req, res) => {
     const review = new Review({
       productId,
       userId,
+      userName,
       reviewMessage,
       reviewValue,
     });
