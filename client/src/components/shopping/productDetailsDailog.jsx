@@ -90,6 +90,10 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
     }
   }, [product]);
 
+  const averageReview = reviews && reviews.length > 0 ?
+    reviews.reduce((sum, item) => sum + item.reviewValue, 0) /
+    reviews.length : 0;
+
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:mx-w-[80vw] lg:max-w-[70vw]">
@@ -108,12 +112,8 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
             }
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <span className="text-muted-foreground">(4.5)</span>
+            <StartRating rating={averageReview} />
+            <span className="text-muted-foreground">({averageReview})</span>
           </div>
           <div className="mt-5 mb-5">
             {
