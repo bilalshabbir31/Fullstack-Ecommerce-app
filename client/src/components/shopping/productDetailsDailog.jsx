@@ -68,12 +68,17 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
       reviewMessage: reviewMsg,
       reviewValue: rating,
     })).then(data => {
-      if (data?.payload.success) {
+      if (data?.payload?.success) {
         setRating(0);
         setReviewMsg('');
         dispatch(fetchReviews(product?._id));
         toast({
           title: 'Review Added Successfully!'
+        })
+      } else {
+        toast({
+          title: data?.payload?.message,
+          variant: 'destructive'
         })
       }
     })

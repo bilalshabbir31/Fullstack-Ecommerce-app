@@ -8,9 +8,13 @@ const initialState = {
 
 export const addReview = createAsyncThunk(
   "/review/addReview",
-  async (formData) => {
-    const response = await axiosObj.post("/shop/review/", formData);
-    return response?.data;
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosObj.post("/shop/review/", formData);
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
