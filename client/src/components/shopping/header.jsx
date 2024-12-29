@@ -54,8 +54,9 @@ function HeaderRightContent() {
 
   return <div className="flex lg:items-center lg:flex-row flex-col gap-4">
     <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-      <Button onClick={() => setOpenCartSheet(true)} variant="outline" size="icon">
+      <Button onClick={() => setOpenCartSheet(true)} variant="outline" size="icon" className="relative">
         <ShoppingCart className="h-6 w-6" />
+        <span className="absolute top-[-1px] right-[2px] font-bold text-sm">{cartItems?.items?.length || 0}</span>
         <span className="sr-only">User Cart</span>
       </Button>
       <CartWrapper setOpenCartSheet={setOpenCartSheet} cartItems={cartItems && cartItems.items && cartItems?.items.length > 0 ? cartItems.items : []} />
