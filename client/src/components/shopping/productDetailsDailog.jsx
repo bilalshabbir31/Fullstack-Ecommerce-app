@@ -8,11 +8,18 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice"
 import { useToast } from "@/hooks/use-toast"
 import { useDispatch, useSelector } from "react-redux"
 import { setProductDetails } from "@/store/shop/product-slice"
+import { Label } from "../ui/label"
+import StartRating from "../common/startRating"
+import { useEffect, useState } from "react"
+import { addReview, fetchReviews } from "@/store/shop/review-slice"
 
 const ProductDetailsDailog = ({ open, setOpen, product }) => {
 
+  const [reviewMsg, setReviewMsg] = useState('');
+  const [rating, setRating] = useState(0);
   const { user } = useSelector(state => state.auth);
   const { cartItems } = useSelector(state => state.shopCart);
+  const { reviews } = useSelector(state => state.shopReview);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
@@ -45,7 +52,47 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
   function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
+    setRating(0);
+    setReviewMsg('');
   }
+
+  function handleRatingChange(value) {
+    setRating(value);
+  }
+
+  function handleAddReview() {
+    dispatch(addReview({
+      productId: product?._id,
+      userId: user?.id,
+      userName: user?.userName,
+      reviewMessage: reviewMsg,
+      reviewValue: rating,
+    })).then(data => {
+      if (data?.payload?.success) {
+        setRating(0);
+        setReviewMsg('');
+        dispatch(fetchReviews(product?._id));
+        toast({
+          title: 'Review Added Successfully!'
+        })
+      } else {
+        toast({
+          title: data?.payload?.message,
+          variant: 'destructive'
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (product !== null) {
+      dispatch(fetchReviews(product?._id));
+    }
+  }, [product]);
+
+  const averageReview = reviews && reviews.length > 0 ?
+    reviews.reduce((sum, item) => sum + item.reviewValue, 0) /
+    reviews.length : 0;
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
@@ -65,12 +112,8 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
             }
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <StarIcon className="w-5 h-5 fill-primary" />
-            <span className="text-muted-foreground">(4.5)</span>
+            <StartRating rating={averageReview} />
+            <span className="text-muted-foreground">({averageReview})</span>
           </div>
           <div className="mt-5 mb-5">
             {
@@ -81,28 +124,31 @@ const ProductDetailsDailog = ({ open, setOpen, product }) => {
           <div className="max-h-[300px] overflow-auto">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="grid gap-6">
-              <div className="flex gap-4">
-                <Avatar className="w-10 h-10 border">
-                  <AvatarFallback>B</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold">Muhammad Bilal</h3>
-                  </div>
-                  <div className="flex items-center gap-0.5">
-                    <StarIcon className="w-5 h-5 fill-primary" />
-                    <StarIcon className="w-5 h-5 fill-primary" />
-                    <StarIcon className="w-5 h-5 fill-primary" />
-                    <StarIcon className="w-5 h-5 fill-primary" />
-                    <StarIcon className="w-5 h-5 fill-primary" />
-                  </div>
-                  <p className="text-muted-foreground">This is an awesome product</p>
-                </div>
-              </div>
+              {
+                reviews && reviews.length > 0 ?
+                  reviews.map(review => <div key={review?._id} className="flex gap-4">
+                    <Avatar className="w-10 h-10 border">
+                      <AvatarFallback>{review?.userName[0].toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold">{review?.userName}</h3>
+                      </div>
+                      <div className="flex items-center gap-0.5">
+                        <StartRating rating={review?.reviewValue} />
+                      </div>
+                      <p className="text-muted-foreground">{review?.reviewMessage}</p>
+                    </div>
+                  </div>) : <h1>No Review</h1>
+              }
             </div>
-            <div className="mt-6 gap-2 flex">
-              <Input placeholder="Write a review" />
-              <Button>Submit</Button>
+            <div className="mt-10 flex-col gap-2 flex">
+              <Label>Write a review</Label>
+              <div className="flex gap-1 ">
+                <StartRating handleRatingChange={handleRatingChange} rating={rating} />
+              </div>
+              <Input name="reviewMessage" value={reviewMsg} onChange={(event) => setReviewMsg(event.target.value)} placeholder="Write a review" />
+              <Button disabled={reviewMsg.trim() === ''} onClick={handleAddReview}>Submit</Button>
             </div>
           </div>
         </div>
