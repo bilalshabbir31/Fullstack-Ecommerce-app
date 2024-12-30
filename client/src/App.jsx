@@ -33,11 +33,14 @@ function App() {
     dispatch(checkAuth())
   }, [dispatch]);
 
-  if (isLoading) return <Skeleton className="bg-black w-[800] h-[600px]" />
+  if (isLoading) return <Skeleton className="bg-black w-full h-full" />
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
+        <Route path="/" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user} />
+        } />
         <Route path="/auth" element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
             <AuthLayout />

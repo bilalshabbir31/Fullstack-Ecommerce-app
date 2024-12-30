@@ -15,6 +15,7 @@ const ShoppingCheckout = () => {
   const { cartItems } = useSelector(state => state.shopCart);
   const { user } = useSelector(state => state.auth);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
+  const [isPaymentStart, setIsPaymentStart] = useState(false);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
@@ -70,15 +71,18 @@ const ShoppingCheckout = () => {
 
     dispatch(createNewOrder(orderData)).then(async (data) => {
       if (data?.payload?.success) {
+        setIsPaymentStart(true);
         const result = await stripe.redirectToCheckout({
           sessionId: data?.payload?.sessionId,
         });
         if (result.error) {
+          setIsPaymentStart(false);
           toast({
             title: 'Something went wrong',
           })
         }
       } else {
+        setIsPaymentStart(false);
         toast({
           title: 'Something went wrong',
         })
@@ -92,7 +96,7 @@ const ShoppingCheckout = () => {
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
-        <Address setCurrentSelectedAddress={setCurrentSelectedAddress} />
+        <Address setCurrentSelectedAddress={setCurrentSelectedAddress} selectedId={currentSelectedAddress?._id} />
         <div className="flex flex-col gap-4">
           {
             cartItems && cartItems.items && cartItems.items.length > 0 ?
@@ -105,7 +109,11 @@ const ShoppingCheckout = () => {
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button onClick={handleInitialStripePayment} className="w-full">Checkout</Button>
+            <Button onClick={handleInitialStripePayment} className="w-full">
+              {
+                isPaymentStart ? 'Processing...' : 'Checkout'
+              }
+            </Button>
           </div>
         </div>
       </div>
