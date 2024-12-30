@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosObj = axios.create({
-  baseURL: import.meta.API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true, // send the cookies to server
 });
 
