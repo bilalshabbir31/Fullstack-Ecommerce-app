@@ -8,7 +8,7 @@ import { createNewOrder } from "@/store/shop/order-slice"
 import { useToast } from "@/hooks/use-toast"
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("pk_test_51QGbRnLepBannWwsQ84CJ04cqi9vloqbKIhLky9BwSuCcwZQObFeTGiVrCQVQ9rhI9b2LAwb0pbuDCm7FHIfeHZG00z9F8tRG2")
+const stripePromise = loadStripe(import.meta.env.STRIPE_URL)
 
 const ShoppingCheckout = () => {
 
