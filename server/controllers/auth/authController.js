@@ -50,9 +50,22 @@ const login = async (req, res) => {
       }
     );
 
-    res.cookie("token", token, { httpOnly: true, secure: true }).json({
+    // if we want to set cookie
+    // res.cookie("token", token, { httpOnly: true, secure: true }).json({
+    //   success: true,
+    //   message: "Logged In Successfully",
+    //   user: {
+    //     id: user._id,
+    //     email: user.email,
+    //     userName: user.userName,
+    //     role: user.role,
+    //   },
+    // });
+
+    res.status(200).json({
       success: true,
       message: "Logged In Successfully",
+      token,
       user: {
         id: user._id,
         email: user.email,
