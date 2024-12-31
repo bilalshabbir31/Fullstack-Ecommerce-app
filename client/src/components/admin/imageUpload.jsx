@@ -43,8 +43,8 @@ const ProductImageUpload = ({ imageFile, imageLoadingState, setImageFile, upload
     data.append('my_file', imageFile)
     const response = await axiosObj.post('/admin/products/upload-image', data)
     if (response) {
-      setUploadedImageUrl(response.data.result.url)
-      setImageLoadingState(false)
+      setUploadedImageUrl(response.data.result.secure_url);
+      setImageLoadingState(false);
     }
   }
 
